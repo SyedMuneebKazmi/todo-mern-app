@@ -24,66 +24,78 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB Connected'))
 .catch(err => console.log(err));
 
-// Import Todo model
-const Todo = require('./models/Todo');
+// Import Product model
+const Product = require('./Models/Todo');
 
 // Routes
-// Get all todos
-app.get('/get', async (req, res) => {
+// Get all products
+app.get('/api/products', async (req, res) => {
     try {
-        const todos = await Todo.find();
-        res.json(todos);
+        const products = await Product.find();
+        res.json(products);
     } catch (err) {
-        res.status(5001).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 
-// Add a todo
-app.post('/add', async (req, res) => {
+// Get a single product by ID
+app.get('/api/products/:id', async (req, res) => {
     try {
-        const newTodo = new Todo({
-            task: req.body.task
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.json(product);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Add a product
+app.post('/api/products', async (req, res) => {
+    try {
+        const newProduct = new Product({
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            imageUrl: req.body.imageUrl,
+            category: req.body.category,
+            inStock: req.body.inStock
         });
-        const savedTodo = await newTodo.save();
-        res.status(201).json(savedTodo);
+        const savedProduct = await newProduct.save();
+        res.status(201).json(savedProduct);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 });
 
-// Toggle todo status (done/not done)
-app.put('/edit/:id', async (req, res) => {
+// Update a product
+app.put('/api/products/:id', async (req, res) => {
     try {
-        const todo = await Todo.findById(req.params.id);
-        todo.done = !todo.done;
-        const updatedTodo = await todo.save();
-        res.json(updatedTodo);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
-
-// Update todo task
-app.put('/update/:id', async (req, res) => {
-    try {
-        const updatedTodo = await Todo.findByIdAndUpdate(
+        const updatedProduct = await Product.findByIdAndUpdate(
             req.params.id, 
-            { task: req.body.task },
+            req.body,
             { new: true }
         );
-        res.json(updatedTodo);
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.json(updatedProduct);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 });
 
-// Delete todo
-app.delete('/delete/:id', async (req, res) => {
+// Delete a product
+app.delete('/api/products/:id', async (req, res) => {
     try {
-        const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
-        res.json(deletedTodo);
+        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+        if (!deletedProduct) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.json(deletedProduct);
     } catch (err) {
-        res.status(5001).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 
