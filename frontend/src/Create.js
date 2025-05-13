@@ -20,7 +20,7 @@ const Create = () => {
 
     return (
         <main>
-            <h1>Todo List Husnain</h1>
+            <h1>Todo List hasnain ahmed</h1>
             <div className='create-form'>
                 <input
                     type='text'
