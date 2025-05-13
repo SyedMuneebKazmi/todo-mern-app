@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set your Docker Hub username
-DOCKER_USERNAME="husnain239"
+DOCKER_USERNAME="syedmuneebkazmi"
 
 # Create a temporary file with the Docker username replaced
 sed "s/\${DOCKER_USERNAME}/$DOCKER_USERNAME/g" k8s/all-in-one-deployment.yaml > k8s/temp-deployment.yaml

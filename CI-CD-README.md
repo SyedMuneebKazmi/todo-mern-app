@@ -5,7 +5,7 @@ This document explains how to set up Continuous Integration and Continuous Deplo
 ## GitHub Actions Setup
 
 ### Required Secrets
-
+new line
 Add the following secrets to your GitHub repository (Settings > Secrets and variables > Actions):
 
 1. `DOCKER_USERNAME`: Your Docker Hub username (husnain239)
